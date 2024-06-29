@@ -2,7 +2,7 @@ DATA:
   IMG_SIZE: 256
 MODEL:
   TYPE: swinv2
-  NAME: swinv2_base_patch4_window12to16_192to256_22kto1k_ft
+  NAME: swinv2_large_patch4_window12to16_192to256_22kto1k_ft
   DROP_PATH_RATE: 0.2
   SWINV2:
     EMBED_DIM: 192
@@ -11,7 +11,7 @@ MODEL:
     WINDOW_SIZE: 16
     PRETRAINED_WINDOW_SIZES: [ 12, 12, 12, 6 ]
 TRAIN:
-  EPOCHS: 30
+  EPOCHS: 50
   WARMUP_EPOCHS: 5
   WEIGHT_DECAY: 1e-8
   BASE_LR: 2e-05

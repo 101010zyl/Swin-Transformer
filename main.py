@@ -28,6 +28,7 @@ from optimizer import build_optimizer
 from logger import create_logger
 from utils import load_checkpoint, load_pretrained, save_checkpoint, NativeScalerWithGradNormCount, auto_resume_helper, \
     reduce_tensor
+from torch.utils.tensorboard import SummaryWriter
 
 # pytorch major version (1.x or 2.x)
 PYTORCH_MAJOR_VERSION = int(torch.__version__.split('.')[0])
@@ -150,6 +151,9 @@ def main(config):
         throughput(data_loader_val, model, logger)
         return
 
+    # set tensorboard
+    tb_writer = SummaryWriter(log_dir=("/root/autodl-tmp/swin-"+str(config.TAG)))
+        
     logger.info("Start training")
     start_time = time.time()
     for epoch in range(config.TRAIN.START_EPOCH, config.TRAIN.EPOCHS):
@@ -163,6 +167,10 @@ def main(config):
 
         acc1, acc5, loss = validate(config, data_loader_val, model)
         logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {acc1:.1f}%")
+        # tensorboard acc@1 and lr
+        tb_writer.add_scalar('accuracy_test', acc1 / 100, epoch)
+        tb_writer.add_scalar('lr', optimizer.param_groups[0]['lr'], epoch)
+        
         max_accuracy = max(max_accuracy, acc1)
         logger.info(f'Max accuracy: {max_accuracy:.2f}%')
 
